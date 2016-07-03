@@ -1,0 +1,244 @@
+\documentclass{article}
+
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\usepackage{hyperref}
+%\usepackage{multirow}
+
+
+\title{Build a Student Intervention System: Project Report}
+\author{Shilpak Banerjee}
+%\date{}
+
+
+\begin{document}
+
+\maketitle
+
+
+\section{Classification vs Regression}
+
+Your goal is to identify students who might need early intervention.
+
+\begin{itemize}
+\item Which type of supervised machine learning problem is this, classification or regression? Why?
+
+\emph{Answer:} This is a classification problem because the output we are predicting is discrete valued i.e. ``passed'' vs ``failed''. In regression problems the output is continuous valued.
+
+\end{itemize}
+
+\section{Exploring the Data}
+
+Can you find out the following facts about the dataset?
+\begin{itemize}
+\item Total number of students
+
+\emph{Answer:} 395
+
+\item Number of students who passed
+
+\emph{Answer:} 265
+
+\item Number of students who failed
+
+\emph{Answer:} 130
+
+\item Graduation rate of the class (%)
+
+\emph{Answer:} 67\%
+
+\item Number of features (excluding the label/target column)
+
+\emph{Answer:} 30
+
+\end{itemize}
+
+\section{Preparing the Data}
+
+Execute the following steps to prepare the data for modeling, training and testing:
+
+\begin{itemize}
+\item Identify feature and target columns
+
+\emph{Answer:} See code.
+
+\item Preprocess feature columns
+
+\emph{Answer:} See code.
+
+\item Split data into training and test sets
+
+\emph{Answer:} See code.
+
+\item Starter code snippets for these steps have been provided in the template.
+
+\emph{Answer:} See code.
+
+\end{itemize}
+
+\section{Training and Evaluating Models}
+
+Choose 3 supervised learning models that are available in scikit-learn, and appropriate for this problem. For each model:
+
+\begin{itemize}
+\item Learning Model: \emph{Decision tree classifier} \footnote{I took help from \url{http://scikit-learn.org/} and \url{https://storage.googleapis.com/supplemental_media/udacityu/5414400946/ID3\%20Algorithm\%20for\%20Decision\%20Trees.pdf} for answering the questions about this model.}
+
+\begin{itemize}
+\item What is the theoretical $O(n)$ time \& space complexity in terms of input size?
+
+\emph{Answer:} Training time of a binary tree is $O(n_{\text{features}}\cdot n_{\text{training set size}}^2\cdot\ln(n_{\text{training set size}}))$. Prediction time is $O(\ln(n_{\text{test set size}})$.
+
+\item What are the general applications of this model? What are its strengths and weaknesses?
+
+\emph{Answer:} Decision tree classifiers can be applied to a wide range of supervised learning classification problems with both numeric and non numeric features. Other strengths include little need for data preparation (inserting missing values), simple to understand, low running time of a trained tree. Weaknesses include their tendency to overfit the training data. So not suitable where the feature set is very large. Also in case of the ID3 algorithm we only select the best feature based on the entropy reduction in the next step. So trained tree may not be the optimal one.
+
+\item Given what you know about the data so far, why did you choose this model to apply?
+
+\emph{Answer:} I find the Decision tree model easy to understand and hence a good first model for classification problems in general. In the training part of the student intervention data set the refined data frame consists of 48 features and 300 samples. So I did not think overfitting will be too big of a problem. (After running the test it did infact turned out to be a problem).
+
+\item Fit this model to the training data, try to predict labels (for both training and test sets), and measure the F1 score. Repeat this process with different training set sizes (100, 200, 300), keeping test set constant.
+
+\emph{Answer:} See code.
+
+\item Produce a table showing training time, prediction time, F1 score on training set and F1 score on test set, for each training set size.
+
+\emph{Answer:}
+\begin{center}
+  \begin{tabular}{| l | c | c | c |}
+  \hline
+                              & \multicolumn{3}{ c |}{Training set size} \\ \cline{2-4}
+                              & 100   & 200   & 300                      \\ \hline
+  Training time (secs)        & 0.003 & 0.003 & 0.004                    \\ \hline
+  Prediction time (secs)      & 0.001 & 0.001 & 0.001                    \\ \hline
+  F1 score for training set   & 1.000 & 1.000 & 1.000                    \\ \hline
+  F1 score for test set       & 0.615 & 0.705 & 0.593                    \\ \hline
+  \end{tabular}
+\end{center}
+\end{itemize}
+
+
+\item Learning Model: \emph{Support vector machine} \footnote{I took help from \url{http://scikit-learn.org/} and \url{https://storage.googleapis.com/supplemental_media/udacityu/5422370632/Kernel_Methods_and_SVMs.pdf} for answering the questions about this model.}
+
+\begin{itemize}
+\item What is the theoretical $O(n)$ time \& space complexity in terms of input size?
+
+\emph{Answer:} Theoritical training time is $O(n_{\text{features}}\cdot n_{\text{training set size}}^3)$
+
+\item What are the general applications of this model? What are its strengths and weaknesses?
+
+\emph{Answer:} SVMs are used for classification problems. Strengths include effectiveness in higher dimensions, memory effective and also they can be improved a lot using Grid Search. Weakness include their ineffectiveness with an extremely large number of features and also they have a low training speed. 
+
+\item Given what you know about the data so far, why did you choose this model to apply?
+
+\emph{Answer:} In our problem we do not have a large feature set compared to the sample size of the training set. So I think SVMs will make a good choice.
+
+\item Fit this model to the training data, try to predict labels (for both training and test sets), and measure the F1 score. Repeat this process with different training set sizes (100, 200, 300), keeping test set constant.
+
+\emph{Answer:} See code.
+
+\item Produce a table showing training time, prediction time, F1 score on training set and F1 score on test set, for each training set size.
+
+\emph{Answer:}
+\begin{center}
+  \begin{tabular}{| l | c | c | c |}
+  \hline
+                              & \multicolumn{3}{ c |}{Training set size} \\ \cline{2-4}
+                              & 100   & 200   & 300                      \\ \hline
+  Training time (secs)        & 0.002 & 0.004 & 0.013                    \\ \hline
+  Prediction time (secs)      & 0.002 & 0.003 & 0.004                    \\ \hline
+  F1 score for training set   & 0.878 & 0.868 & 0.876                    \\ \hline
+  F1 score for test set       & 0.775 & 0.781 & 0.784                    \\ \hline
+  \end{tabular}
+\end{center}
+\end{itemize}
+
+
+\item Learning Model: \emph{Naive Bayes with Gaussian NB} \footnote{I took help from \url{http://scikit-learn.org/} and \url{https://storage.googleapis.com/supplemental_media/udacityu/5462070314/Bayesian\%20Learning.pdf}}
+
+\begin{itemize}
+\item What is the theoretical $O(n)$ time \& space complexity in terms of input size?
+
+\emph{Answer:} Training time is $O(n_{\text{training set size}})$. (I am not sure)
+
+\item What are the general applications of this model? What are its strengths and weaknesses?
+
+\emph{Answer:} Naive Bayes is used in supervised learninng classification problems like spam filtration and document classification. Strengths include small requirement of training data and fast speed. Weakness include it beign a bad estimator of prediction probabilities. 
+
+\item Given what you know about the data so far, why did you choose this model to apply?
+
+\emph{Answer:} In our case our data set is not too big and we only require a classifier as opposed to predicting the probability of a student passing.
+
+\item Fit this model to the training data, try to predict labels (for both training and test sets), and measure the F1 score. Repeat this process with different training set sizes (100, 200, 300), keeping test set constant.
+
+\emph{Answer:} See code.
+
+\item Produce a table showing training time, prediction time, F1 score on training set and F1 score on test set, for each training set size.
+
+\emph{Answer:}
+\begin{center}
+  \begin{tabular}{| l | c | c | c |}
+  \hline
+                              & \multicolumn{3}{ c |}{Training set size} \\ \cline{2-4}
+                              & 100   & 200   & 300                      \\ \hline
+  Training time (secs)        & 0.001 & 0.001 & 0.001                    \\ \hline
+  Prediction time (secs)      & 0.000 & 0.000 & 0.001                    \\ \hline
+  F1 score for training set   & 0.847 & 0.841 & 0.804                    \\ \hline
+  F1 score for test set       & 0.803 & 0.724 & 0.763                    \\ \hline
+  \end{tabular}
+\end{center}
+\end{itemize}
+\end{itemize}
+
+
+
+\section{Choosing the Best Model}
+
+\begin{itemize}
+\item Based on the experiments you performed earlier, in 2-3 paragraphs explain to the board of supervisors what single model you choose as the best model. Which model has the best test F1 score and time efficiency? 
+
+\emph{Answer:} I choose the Support vector machine based on the test performed above. 
+
+My test showed that F1 score for the training data is better for the SVM than the GaussianNB model. One may argue that the Naive Bayes has a marginally better F1 score than the SVM on the test data but my assumption at this point is that for a different test set this difference may not matter and since SVM is more customizable, I can better the F1 score of GaussianNB even on this test data set with a good SVM\footnote{I amanged to close in on the difference but could not better it.} improved by a gridsearch. Also I ruled out decision trees because an F1 score of $1.0$ on the traing data indicated a massive overfitting problem. This is also reflected by the extremely poor performance on the test set.
+
+Another point that needed to be mentioned was the time factor. SVMs do take a longer time to train. But our training data set is not big enough for this to be a matter of concern.
+
+
+\emph{Best F1 score on training set:} SVM @ 0.878 
+
+\emph{Best F1 score on test set:} GaussianNB @ 0.803
+
+\emph{Fastest training time:} GaussianNB
+
+\emph{Fastest prediction time:} GaussianNB
+
+\item Which model is generally the most appropriate based on the available data, limited resources, cost, and performance? Please directly compare and contrast the numerical values recored to make your case.
+
+\emph{Answer:} I choose the SVM because our training data set is not very large. It is also a memory efficient model. There is a time penalty one needs to pay for SVM but our training time is not large enough ($<1$ sec) to concern ourself with.
+
+One can make a strong case for the GaussianNB model also because of its performance on the test data set and also the SVM is only marginally better on the training set (In fact after a grid search the F1 score on the training data set drops to $0.832$ from $0.876$. So indeed it was overfitting and removal of the overfitting resulted in this drop and an increase in F1 score on the test data set from $0.784$ to $0794$. So the optimized SVM performed marginally worse on both the training set and the test set when compared to the GaussianNB.
+
+\item In 1-3 paragraphs explain to the board of supervisors in layman’s terms how the final model chosen is supposed to work (for example if you chose a decision tree or support vector machine, how does it learn to make a prediction).
+
+* \emph{Answer: } Support vector machine (SVM) is an algorithm to classify a dataset into its target categories. We give a simple description of such an algorithm at work using a simple example. 
+
+Consider a data set with only two features. This dataset can be easily plotted on the two dimensional plane. Assume this entire dataset is categorized into two categories, say, blue category and red category. Assume that we can draw a straight line on the plane which can divide the data points and the blue data points are on one side while the red data points are on the other side. Any such straight line correctly dividing the existing data set can be used to classify future data into red and blue category. And with any given data set, if there is one dividing straight line, then one can obtain infinitely many such lines by perturbing this line. Which one is the best choice to classify future data? Well, the SVM way is to choose a \emph{separating} line which is furthest away from the red and the blue points. Note that choosing this best separating line only requires us to consider the red points that are closest to the blue cluster and blue points closest to the red cluster.   
+
+Of course one can generalize such a technology to more general scenerios by considering complicated separating curves (and hypersurfaces for higher dimensions). 
+
+\item Fine-tune the model. Use gridsearch with at least one important parameter tuned and with at least 3 settings. Use the entire training set for this.
+
+\emph{Answer:} See code.
+
+\item What is the model’s final F1 score?
+
+\emph{Answer:} $0.795$
+\end{itemize}
+
+
+\end{document}
