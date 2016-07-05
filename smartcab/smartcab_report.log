@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.5.7)  5 JUL 2016 01:13
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.5.7)  5 JUL 2016 11:16
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -421,43 +421,43 @@ Missing character: There is no ™ in font cmr10!
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
- [2]
+ [2] [3]
 
-./smartcab_report.tex:114: LaTeX Error: Illegal character in array arg.
+./smartcab_report.tex:192: LaTeX Error: Illegal character in array arg.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.114     \begin{tabular}{ | c || c | c | c | C |}
+l.192     \begin{tabular}{ | c || c | c | c | C |}
                                                   
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
-Overfull \hbox (0.55165pt too wide) in paragraph at lines 114--125
+Overfull \hbox (0.55165pt too wide) in paragraph at lines 192--203
  [] 
  []
 
-[3]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 158.
- [4]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 158.
+[4]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 236.
+ [5]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 236.
  (./smartcab_report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 158.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 158.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 236.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 236.
 Package rerunfilecheck Info: File `smartcab_report.out' has not changed.
 (rerunfilecheck)             Checksum: E7810405ABD52836886E99E51710594E;241.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 158.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 236.
  ) 
 Here is how much of TeX's memory you used:
- 6618 strings out of 495028
- 94758 string characters out of 6181498
+ 6619 strings out of 495028
+ 94764 string characters out of 6181498
  188540 words of memory out of 5000000
  9733 multiletter control sequences out of 15000+600000
  12699 words of font info for 52 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 29i,8n,43p,989b,388s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,8n,43p,989b,392s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texl
@@ -473,10 +473,10 @@ usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/sh
 are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/t
 exmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on smartcab_report.pdf (4 pages, 186081 bytes).
+Output written on smartcab_report.pdf (5 pages, 189059 bytes).
 PDF statistics:
- 113 PDF objects out of 1000 (max. 8388607)
- 90 compressed objects within 1 object stream
- 12 named destinations out of 1000 (max. 500000)
+ 118 PDF objects out of 1000 (max. 8388607)
+ 94 compressed objects within 1 object stream
+ 13 named destinations out of 1000 (max. 500000)
  33 words of extra memory for PDF output out of 10000 (max. 10000000)
 

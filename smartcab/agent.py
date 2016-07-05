@@ -91,8 +91,9 @@ class LearningAgent(Agent):
         
         # TODO: Learn policy based on state, action, reward
 
-        self.Q_table[(self.state,action)] = (1.0 - self.alpha)*(self.Q_table.get((self.state,action),self.default)) + self.alpha*(reward + (self.gamma)*(max([self.Q_table.get((self.next_state,None),self.default), self.Q_table.get((self.next_state,'forward'),self.default), self.Q_table.get((self.next_state,'left'),self.default), self.Q_table.get((self.next_state,'right'), self.default)])))    # Updating q-values
-        
+        self.Q_table[(self.state,action)] = (1.0 - self.alpha)*(self.Q_table.get((self.state,action),self.default)) + self.alpha*(reward + (self.gamma)*(max([self.Q_table.get((self.next_state, temp_action),self.default) for temp_action in Environment.valid_actions])))   # Updating q-value
+
+
         self.temp_dict = {}
        
         
@@ -133,7 +134,7 @@ def run():
         # NOTE: You can set enforce_deadline=False while debugging to allow longer trials
 
         # Now simulate it
-        sim = Simulator(e, update_delay=0.5, display=True)  # create simulator (uses pygame when display=True, if available)
+        sim = Simulator(e, update_delay=0.0000000005, display=False)  # create simulator (uses pygame when display=True, if available)
         # NOTE: To speed up simulation, reduce update_delay and/or set display=False
     
         sim.run(n_trials=100)  # run for a specified number of trials

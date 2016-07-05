@@ -95,6 +95,84 @@ Each action generates a corresponding numeric reward or penalty (which may be ze
 
 \noindent\textbf{Answer:} With Q-learning implemented, the agent takes an action and then updates the Q value and then the policy based on the reward obtain and on the next intersection if uses the policy with probability $1-\epsilon_t$ and hence this produces a much better opposed response than just randomly taking an action.
 
+In order to make it more precise, one may refer to the following output from my code which is the final policy learned by the agent. This is the exact same policy that the agent used in its very last trail. Note that if the heading is forward and the lights are green, the agent moves forward in most of the frequently occuring cases. This is how it should be and is better than just randomly taking an action. Same is the case with the other choices. So we conclude that that the agent is following directions given by the planner. One may also note that the smartcab now follows the traffic rules most of the times (note if signal is red, then it is stopped or turning right with very few exception). 
+
+
+
+\begin{verbatim}
+Final policy learned by agent:
+
+(STATE)                                  ACTION              
+
+('forward', 'green', None, None)         forward             
+('forward', 'green', None, 'forward')    forward             
+('forward', 'green', None, 'left')       forward             
+('forward', 'green', 'left', None)       left                
+('forward', 'green', 'right', None)      right               
+('forward', 'red', None, None)           None                
+('forward', 'red', None, 'right')        None                
+('forward', 'red', 'forward', None)      None                
+('forward', 'red', 'left', None)         right               
+('forward', 'red', 'right', None)        None                
+('left', 'green', None, None)            left                
+('left', 'green', None, 'forward')       forward             
+('left', 'green', None, 'left')          right               
+('left', 'green', None, 'right')         None                
+('left', 'green', 'left', None)          None                
+('left', 'green', 'right', None)         left                
+('left', 'red', None, None)              None                
+('left', 'red', None, 'left')            None                
+('left', 'red', 'forward', None)         None                
+('left', 'red', 'left', None)            None                
+('left', 'red', 'right', None)           None                
+('right', 'green', None, None)           right               
+('right', 'green', None, 'forward')      right               
+('right', 'green', None, 'left')         forward             
+('right', 'green', None, 'right')        right               
+('right', 'green', 'left', None)         right               
+('right', 'red', None, None)             right               
+('right', 'red', None, 'forward')        left                
+('right', 'red', None, 'left')           None                
+('right', 'red', None, 'right')          forward             
+('right', 'red', 'forward', None)        right               
+('right', 'red', 'left', None)           right               
+('right', 'red', 'right', None)          forward             
+
+\end{verbatim}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 For a detailed analysis we refer to table 1 where we use the following to measure the efficacy of our choice of parameters:
 \begin{itemize}
 \item \textbf{Average reward/trial}: We run 100 trials of our algorithm and then record the net reward for the last 10 of those trials and then repeat this entire procedure for 10 times and take the average. This gives a good measure of the expected reward earned by the agent.
