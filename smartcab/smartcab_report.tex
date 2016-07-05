@@ -12,6 +12,7 @@
 \usepackage{mathrsfs}
 
 
+
 \title{Train a Smartcab to Drive: Project Report}
 \author{Shilpak Banerjee}
 %\date{}
@@ -40,7 +41,21 @@ Run this agent within the simulation environment with enforce\_deadline set to F
 
 \vspace{.2cm}
 
-\noindent\textbf{Answer:}  In the existing code this situation is achieved by setting alpha = anything, gamma = anything, epsilon = 1, enforce\_deadline = False. Yes the agent does find its way to the destination most of the times. Only on few occassions trial is aborted because of reaching the hard time limit.  
+\noindent\textbf{Answer:}  At the very begining I made the agent choose a random action at each intersection. I achieved this via the command 
+\begin{verbatim}
+action = random.choice([None, 'forward', 'left', 'right'])
+\end{verbatim}
+which in our set-up is equivalent to the following command suggested by the reviewer,
+\begin{verbatim} 
+action = random.choice(self.env.valid_actions)
+\end{verbatim}
+Predictably the agent in this case almost never reaches the destination (see table 1, last row) when
+\begin{verbatim}
+enforce_deadline = True
+\end{verbatim}
+However if one sets the above to False, the performance of the agent improves somewhat however in most of the cases the agent is still unable to reach its destination as the algorithm hits the hard time limit of $-100$.
+
+One may note that in the existing code one can replicate the the aforementioned situation by setting $\alpha =$ anything, $\gamma =$ anything, $\epsilon =$ 1 and enforce\_deadline = False. 
 
 
 
@@ -56,7 +71,14 @@ At each time step, process the inputs and update the current state. Run it again
 
 \vspace{.2cm}
 
-\noindent\textbf{Answer:} I choose next waypoint, traffic light atatus, heading/presence of oncoming traffic and heading/presence of traffic to the left of the smartcab as my state. I skipped right traffic and also the deadline since I do not want my smartcab to crash or diobey traffic rules to reach destination on time. Also traffic to the right do no affect the anything, so I skipped it. (Also after completing the project, it seems to me that there is no severe penalty for crashing or it des not happen very often because of low traffic/low number of trails. So next waypint and traffic light will probably make a better choice of states since this lower number of states will also increase the number of times each state is visited during the trails).
+\noindent\textbf{Answer:} I choose the combination of \emph{next\_waypoint, traffic light status, heading/presence of oncoming traffic and heading/presence of traffic to the left of the smartcab} as my state. The traffic to the right of the smartcab do no affect its decision making process in any way, so I skipped it. A valid argument can be made to include the deadline as an indicator of state. However the following two reasons persuaded me to avoid using it:
+\begin{itemize}
+\item Including the deadline will greatly increase the number of states and hence the agent will visit each state with less frequency ($100$ trials is not enough) and hence it wont train very well. 
+\item I do not want my smartcab to disobey a traffic rule or crash \footnote{Also after completing the project, it seems to me that there is no severe penalty for crashing or it does not happen very often because of low traffic/low number of trails. So next waypint and traffic light will probably make a better choice of states since this lower number of states will also increase the number of times each state is visited during the trails.} to make it to the destination in time. May be the fare can also be a indicator and if Bill Gates is paying, this indicator should be the only indicator of the state :D. 
+\end{itemize} 
+
+
+
 
 
 \section{Implement Q-Learning}
@@ -71,7 +93,17 @@ Each action generates a corresponding numeric reward or penalty (which may be ze
 
 \vspace{.2cm}
 
-\noindent\textbf{Answer:} With $\alpha=0.05$, $\gamma=0.95$ and $\epsilon=0.2$, the agent reaches destination most of the time. If we set enforse\_deadline = True, then the agen reaches deadline with increasing frequency with time.  
+\noindent\textbf{Answer:} With Q-learning implemented, the agent takes an action and then updates the Q value and then the policy based on the reward obtain and on the next intersection if uses the policy with probability $1-\epsilon_t$ and hence this produces a much better opposed response than just randomly taking an action.
+
+For a detailed analysis we refer to table 1 where we use the following to measure the efficacy of our choice of parameters:
+\begin{itemize}
+\item \textbf{Average reward/trial}: We run 100 trials of our algorithm and then record the net reward for the last 10 of those trials and then repeat this entire procedure for 10 times and take the average. This gives a good measure of the expected reward earned by the agent.
+\item \textbf{Average penalty/trial}: We run the entire 100 trials of our algorithm and then record the negative rewards (penalties) for the last 10 of those trials and then repeat this entire procedure for 10 times and take the average. This gives a measure of the expected penalty earned by the agent.
+\item \textbf{Average number of moves/trial}: We run the entire 100 trials of our algorithm and then record the average number of moves for the last 10 of those trials and then repeat this entire procedure for 10 times and take the average. This gives a measure of the expected number of moves executed by the agent.
+\item \textbf{Average number of success out of last 10 trials}: We run the entire 100 trials of our algorithm and then record the no of times the smartcab reaches its destination out of the last 10 of those trials and then repeat this entire procedure for 10 times and take the average. This gives a measure of the success rate of the agent.
+\end{itemize}  
+
+So now we explain how the parameter were chosen in the Q-learning algorithm. Since we measure our success from the last 10 trials, it is appropriate to consider the first 90 trials to be the training part of the algorithm. So we set $\alpha=\epsilon=1$ for the first 90 trials and then for the last 10 trials or the evaluation phase of the algorithm we use a very fast decaying $\alpha$ and $\epsilon$ \footnote{Thanks to the reviewer for making this suggestion}. This way we switch from heavy exploration to heavy exploitation very quickly. So the only parameter that remains to be tuned is $\gamma$ and we use table 1 to select $\gamma = 0.10$ for its superior performance in the category of rewards and success rate.
 
 
 \section{Enhance the driving agent}
@@ -79,25 +111,19 @@ Each action generates a corresponding numeric reward or penalty (which may be ze
 
 \begin{table}
   \begin{center}
-    \begin{tabular}{ | l | c | }
+    \begin{tabular}{ | c || c | c | c | C |}
       \hline
-      $(\alpha,\gamma,\epsilon)$ & No of success in last $10$ trials \\ \hline\hline
-      $(\;\;\cdot\;\;\;,\;\;\cdot\;\;\;,1.00)$ & $3$ \\ \hline 
-      $(0.85,0.50,0.80)$ & $3$ \\ \hline 
-      $(0.85,0.00,0.20)$ & $9$ \\ \hline 
-      $(0.85,0.50,0.20)$ & $9$ \\ \hline 
-      $(0.85,0.95,0.80)$ & $2$ \\ \hline 
-      $(0.85,0.95,0.50)$ & $6$ \\ \hline      
-      $(0.05,0.50,0.80)$ & $3$ \\ \hline 
-      $(0.05,0.00,0.20)$ & $8$ \\ \hline 
-      $(0.05,0.50,0.20)$ & $9$ \\ \hline 
-      $(0.05,0.95,0.80)$ & $3$ \\ \hline 
-      $(0.05,0.95,0.50)$ & $7$ \\ \hline 
-      $(0.05,0.95,0.20)$ & $9$ \\
-    \hline
+      $\gamma$ & Reward/trial & Penalty/trial & No of moves/trial & No of success out of last 10 trials \\ \hline\hline
+      $ 0.90 $ & $21.435$ & $2.925$ & $20.600$ & $6.2$ \\ \hline 
+      $ 0.70 $ & $23.150$ & $3.060$ & $20.030$ & $6.0$ \\ \hline 
+      $ 0.50 $ & $27.770$ & $2.760$ & $16.940$ & $8.1$ \\ \hline 
+      $ 0.30 $ & $28.425$ & $2.065$ & $15.080$ & $9.2$ \\ \hline\hline
+      $ 0.10 $ & $23.185$ & $0.390$ & $12.640$ & $9.9$ \\ \hline\hline      
+      $ 0.00 $ & $21.245$ & $0.295$ & $12.500$ & $9.2$ \\ \hline\hline\hline
+      random   & $0.430$ & $11.570$ & $27.030$ & $1.8$ \\ \hline
     \end{tabular}
    \end{center}
-  \caption{Parameter tweaking table: I played around with a bunch of parameters to figure out an optimal set. It seems high $\gamma$ means high weight on deciding to trying to move to the next waypoint. High $\epsilon$ means good policy making but bad immidiate (random) decision taking, so learns but does not use.}
+  \caption{Parameter tweaking table: I played aroud with different values of the parameter $\gamma$. Also in the last row I listed the values when the agent acts randomly with enforce\_deadline set to True. Note that the 2nd, 3rd and 4th column is measured after the taking the average of the last 10 trials and the then those averages are further averaged by running the algorithm 10 more times. Last column is averaged over 10 runs of the algorithm. }
 \end{table}
 
 
@@ -113,8 +139,8 @@ Apply the reinforcement learning techniques you have learnt, and tweak the param
 \vspace{.2cm}
 
 \noindent\textbf{Answer:} I implemented Q-Learning using the following update formula: 
-$$Q(s,a)=(1-\alpha)Q(s,a)+\alpha\big(R+\max_{a'\in A(s')}Q(s',a')\big)$$
- Here $s$ is the present state, $a$ is the action taken and $s'$ is the next state. $A(s')$  is the list of all available actions in the next state. In our case, $A(s')=\{$None, forward, left, right$\}$. This way the aagent is able to learn a policy within the allocated $100$ trials. See Table $1$.
+$$Q(s_{t-1},a_{t-1})=(1-\alpha_{t-1})Q(s_{t-1},a_{t-1})+\alpha\big(R+\gamma\max_{a_{t}\in A(s_{t})}Q(s_{t},a_{t})\big)$$
+ Here $s_{t-1}$ is the state at time $t-1$, $a_{t-1}$ is the action taken at time $t-1$. $A(s_t)$  is the list of all available actions when agent is at state $s_t$. In our case, $A(s_t)=\{$None, forward, left, right$\}$. This way the agent is able to learn a policy within the allocated $100$ trials. See Table $1$ and the discussion is the last paragraph of the previous section for a detailed discussion of how we obtained an optimal set of parameters.
 
 \vspace{.5cm}
 
@@ -122,7 +148,10 @@ $$Q(s,a)=(1-\alpha)Q(s,a)+\alpha\big(R+\max_{a'\in A(s')}Q(s',a')\big)$$
 
 \vspace{.2cm}
 
-\noindent\textbf{Answer:} Yes it does comes close to finding an optimal policy. The reason  is that the most important states seems to be the (next\_waypoint, traffic light) combination which the agent learns very well (8 possibilities and 4 actions, 100 trials with average deadline of 20 or so seems enough for visiting 32 possibilities several times). Since the number of traffic is very low and combined with the fact that the number of trials is also vey low, our smartcab does not always learn not to violate traffic rules and crash in another car. Also I do think that penalty of violating a traffic rule in presence of another traffic (higher accident chance) should be set much higher. Another funny thing I noted: Since our city is a torus, right turn on red is on average the correct decision.
+\noindent\textbf{Answer:} Yes it does comes close to finding an optimal policy. An optimal policy would be to go directly to the next waypoint without violating any traffic rules. The reason our smartcab behaves almost optimally is that the most important states seems to be the (next\_waypoint, traffic light) combination which the agent learns very well (8 possibilities and 4 actions, 100 trials with average deadline of 20 or so seems enough for visiting 32 possibilities several times). Since the number of traffic is very low and combined with the fact that the number of trials is also vey low, our smartcab does not always learn not to violate traffic rules and crash in another car. Also I do think that penalty of violating a traffic rule in presence of another traffic (higher accident chance) should be set much higher. Another funny thing I noted: Since our city is a torus, right turn on red is on average the correct decision.
+
+However one should note that there are times when our smartcab behaves suboptimally, infact one may consider this to be a fatal mistake. For example on one run of the program, I got $$\pi^*\big((\text{'left'},\text{'green'}, \text{'forward'}, \text{None}), \text{'left'}\big)=\text{'left'}$$  
+which means that the optimal policy we found dictated the smartcab to turn left when an oncoming car has a forward heading. The q-value for this was $-1$ and the reason this happened is because this state was visited exactly once during all of the 100 trials and hence the agent did not have time to learn.
 
 
 
